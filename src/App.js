@@ -1,14 +1,42 @@
 import React from "react";
+import { animated } from "react-spring";
+import { Transition } from "react-spring/renderprops";
 import "./App.css";
 import Component1 from "./components/Component1";
 import Component2 from "./components/Component2";
+import Component3 from "./components/Component3";
 
 class App extends React.Component {
+  state = {
+    showComponent3: false
+  };
+
+  toggle = e => {
+    this.setState({ showComponent3: !this.state.showComponent3 });
+  };
+
   render() {
     return (
       <div className="App">
         <Component1 />
-        <Component2 />
+        <Component2 toggle={this.toggle} />
+        <Transition
+          native
+          items={this.state.showComponent3}
+          from={{ opacity: 0 }}
+          enter={{ opacity: 1 }}
+          leave={{ opacity: 0 }}
+          config={{ delay: 1000, duration: 1500 }}
+        >
+          {show =>
+            show &&
+            (props => (
+              <animated.div style={props}>
+                <Component3 />
+              </animated.div>
+            ))
+          }
+        </Transition>
       </div>
     );
   }
